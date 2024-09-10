@@ -1,0 +1,13 @@
+name: Build and Deploy Dev
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  trigger-dev-workflow:
+    uses: ./.github/workflows/build-and-deploy.yaml
+    with:
+      environment: dev
+    secrets: inherit

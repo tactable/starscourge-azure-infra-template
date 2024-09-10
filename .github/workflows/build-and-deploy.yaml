@@ -1,0 +1,70 @@
+name: Build and Deploy Common
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'dev'
+        options:
+          - 'dev'
+          - 'staging'
+          - 'prod'
+
+jobs:
+  build-app:
+    name: Build App
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Azure Container Registry Login
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ vars.AZ_CONTAINER_REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.AZ_SERVICE_PRINCIPAL_CLIENT_ID }}
+          password: ${{ secrets.AZ_SERVICE_PRINCIPAL_CLIENT_SECRET }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: $GITHUB_WORKSPACE/app
+          push: true
+          tags: ${{ vars.AZ_CONTAINER_REGISTRY_LOGIN_SERVER }}/{{ vars.IMAGE_NAME }}:${{ github.sha }},${{ vars.AZ_CONTAINER_REGISTRY_LOGIN_SERVER }}/{{ vars.IMAGE_NAME }}:latest
+
+  deploy-app:
+    name: Deploy App
+    needs: build-app
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    steps:
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Checkout code
+        uses: actions/checkout@main
+
+      - name: Deploy Infra
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            az version
+            /* Uncomment when finalize
+            az stack group create -n ${{ vars.AZ_BICEP_STACK_NAME }}
+              --aou deleteAll \
+              --dm none \
+              -g ${{ vars.AZ_RESOURCE_GROUP }} \ 
+              -f $GITHUB_WORKSPACE/infra/main.bicep \ 
+              -p $GITHUB_WORKSPACE/infra/main.bicepparam
+            */
