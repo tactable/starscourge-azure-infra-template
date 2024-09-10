@@ -1,4 +1,4 @@
-# # WHAT?
+# WHAT?
 > In bullet points, summarize your changes
 
 # WHY?
