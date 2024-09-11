@@ -38,3 +38,7 @@ Configure the following vars:
 4. `AZ_RESOUCE_GROUP`: The Azure resource group
 
 
+# Folder Structure
+
+- `apps/*` - The actual monorepo where you'll place your source code
+- `infra/*` - The infra monorepo where you'll place your infrastructure code
