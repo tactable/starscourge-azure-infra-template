@@ -11,6 +11,10 @@ on:
           - 'dev'
           - 'staging'
           - 'prod'
+      git_sha:
+        description: 'SHA to deploy'
+        required: true
+        default: 'main'
 
 jobs:
   build-app:
@@ -19,7 +23,9 @@ jobs:
     environment: ${{ github.event.inputs.environment }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.git_sha }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -53,7 +59,9 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Checkout code
-        uses: actions/checkout@main
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.git_sha }}
 
       # - name: Deploy Infra
       #   uses: azure/cli@v2
