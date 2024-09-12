@@ -5,26 +5,26 @@ on:
     inputs:
       environment:
         description: 'Environment to deploy to'
-        required: true
-        default: 'dev'
+        type: choice
+        default: dev
         options:
-          - 'dev'
-          - 'staging'
-          - 'prod'
+          - dev
+          - staging
+          - prod
   workflow_dispatch:
     inputs:
       environment:
         description: 'Environment to deploy to'
-        required: true
-        default: 'dev'
+        type: choice
+        default: dev
         options:
-          - 'dev'
-          - 'staging'
-          - 'prod'
-    commit_sha:
+          - dev
+          - staging
+          - prod
+      commit_sha:
         description: 'Commit SHA to deploy'
-        required: true
-        default: 'main'
+        required: false
+        default: ''
 
 jobs:
   build-frontend:
