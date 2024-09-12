@@ -2,25 +2,11 @@ name: Build and Deploy
 
 on:
   workflow_call:
-    inputs:
-      environment:
-        description: 'Environment to deploy to'
-        type: choice
-        default: dev
-        options:
-          - dev
-          - staging
-          - prod
   workflow_dispatch:
     inputs:
       environment:
         description: 'Environment to deploy to'
-        type: choice
-        default: dev
-        options:
-          - dev
-          - staging
-          - prod
+        type: environment
       commit_sha:
         description: 'Commit SHA to deploy'
         required: false
