@@ -9,8 +9,8 @@ This will serve as a template for init an Azure project. This contains:
 # Getting started
 
 1. Create repo from this template. See [here](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template)
-2. Change [name](./.devcontainer/devcontainer.json#L2) to your project name
-3. Add your language to [features](./.devcontainer/devcontainer.json#L4) section. See [available features](https://containers.dev/features)
+2. Change [name](./.devcontainer/devcontainer.json#2) to your project name
+3. Add your language to [features](./.devcontainer/devcontainer.json#4) section. See [available features](https://containers.dev/features)
 
 To enable CI/CD, create an Environment in Github. You can do that under Settings. At the moment of writing this, this workflow only supports deploy to dev environment on push to `main`. It is recommended to do a manual release `workflow_dispatch` for `staging` and `prod`. In the environment, configure the following
 
@@ -38,3 +38,7 @@ Configure the following vars:
 4. `AZ_RESOUCE_GROUP`: The Azure resource group
 
 
+# Folder Structure
+
+- `apps/*` - The actual monorepo where you'll place your source code
+- `infra/*` - The infra monorepo where you'll place your infrastructure code
